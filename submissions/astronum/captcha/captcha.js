@@ -608,7 +608,7 @@ const Ship = (document, canvas, x, y) => {
  * @returns {Number}
  */
 const Number = (document, canvas, x, y, value) => {
-    const BOUND_OFFSET = 11.0;
+    const BOUND_OFFSET = 15.0;
 
     const el = document.createElement("i");
 
