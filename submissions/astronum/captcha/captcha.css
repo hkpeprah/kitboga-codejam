@@ -41,6 +41,7 @@ body {
     position: absolute;
     background-color: #FFF;
     animation: rotate 30s alternate infinite;
+    -webkit-animation: rotate 30s alternate infinite;
     box-shadow:
         24vw 9vh 1px 0px #FFF,
         12vw -24vh 0px 1px #FFF,

@@ -291,9 +291,19 @@ const CaptchaOverlay = (container) => {
         titleEl.innerText = options.title || "";
         subtitleEl.innerHTML = options.text || "";
         if (options.image) {
+            // Unload, then re-load the image. This is necessary to work around
+            // quirks with webkit in Safari that will cause the animation to not
+            // play.
+            image.src = "";
+            image.className = "";
+            image.onload = (() => {
+                image.className = "captcha-shake";
+            });
+
             image.src = options.image;
             image.style.display = "inline-flex";
         } else {
+            image.src = "";
             image.style.display = "none";
         }
 

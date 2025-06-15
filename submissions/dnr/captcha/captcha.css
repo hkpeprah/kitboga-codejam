@@ -117,7 +117,6 @@ body {
     margin-top: -0.8em;
     margin-bottom: 1.2em;
     display: inline-flex;
-    animation: horizontal-shaking 0.35s infinite;
 }
 
 .captcha-container .captcha .captcha-header {
@@ -341,6 +340,11 @@ body {
 
 .captcha-container .captcha .captcha-balance span {
     font-size: 0.8rem;
+}
+
+.captcha-container .captcha .captcha-shake {
+    animation: horizontal-shaking 0.35s linear infinite;
+    -webkit-animation: horizontal-shaking 0.35s linear infinite;
 }
 
 @keyframes horizontal-shaking {
