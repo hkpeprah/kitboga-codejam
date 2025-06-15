@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Captcha</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!-- No favicon -->
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap" rel="stylesheet" />
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="./captcha.css" />
+  </head>
+  <body>
+    <div id="captcha-container" class="captcha-container">
+      <!-- Captcha -->
+      <div id="captcha" class="captcha">
+        <div id="captcha-app" class="captcha-app">
+          <div id="captcha-overlay" class="captcha-overlay"></div>
+          <div class="captcha-header" id="captcha-header">
+            <div class="captcha-timer" id="captcha-timer">
+              <span id="captcha-timer-count">0</span>
+            </div>
+            <div class="captcha-value" id="captcha-value">
+              <span id="captcha-total-value">$0</span>
+            </div>
+          </div>
+          <div class="captcha-content" id="captcha-content">
+            <div class="captcha-gift-card" id="captcha-gift-card" style="visibility: hidden">
+              <div class="captcha-gift-card-logo"></div>
+              <div class="captcha-gift-card-details">
+                <div class="captcha-gift-card-info">
+                  <div class="captcha-gift-card-label">Value</div>
+                  <div class="captcha-gift-card-value">$50</div>
+                </div>
+                <div class="captcha-gift-card-info">
+                  <div class="captcha-gift-card-label">Redeem Code</div>
+                  <div class="captcha-gift-card-code">1234-5678-9876-5432</div>
+                </div>
+              </div>
+            </div>
+            <div class="captcha-balance" id="captcha-balance">
+              <span>$100 has been added to your balance!</span>
+            </div>
+            <div class="captcha-footer" id="captcha-footer">
+              <button class="captcha-button captcha-redeem" id="captcha-redeem">
+                <span>Redeem</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="logos" style="display: none">
+      <svg xmlns="http://www.w3.org/2000/svg" id="captcha-gp" version="1.1"
+           viewBox="-4.12599 -7.65905 35.75858 45.9543">
+        <g transform="translate(.004)" id="g58">
+          <g id="g56">
+            <path id="path40" d="M.55.48A2.39 2.39 0 000 2.15v26.34a2.41 2.41 0 00.55 1.67l.09.09 14.75-14.76v-.35L.64.39z" fill="#EB4630"/>
+            <path id="path42" d="M20.31 20.41l-4.92-4.92v-.35l4.92-4.91.11.06 5.83 3.31c1.67.94 1.67 2.49 0 3.44l-5.83 3.31z" fill="#31a952" />
+            <path id="path44" d="M20.42 20.35l-5-5L.55 30.16a2 2 0 002.45.07l17.39-9.88" fill="#4086f4" />
+            <path id="path46" d="M20.42 10.29L3 .4A1.93 1.93 0 00.55.48l14.84 14.84z" fill="#fbbd01" />
+            <path id="path48" d="M20.31 20.24L3 30.06a2 2 0 01-2.39 0l-.09.09.09.09a2 2 0 002.39 0l17.39-9.88z" opacity=".1" />
+            <path id="path50" d="M.55 30A2.43 2.43 0 010 28.32v.17a2.41 2.41 0 00.55 1.67l.09-.09z" class="captcha-gp" />
+            <path id="path52" d="M26.25 16.86l-5.94 3.38.11.11L26.25 17a2.11 2.11 0 001.25-1.72 2.21 2.21 0 01-1.25 1.58z" class="captcha-gp" />
+            <path id="path54" d="M3 .58l23.25 13.19a2.2 2.2 0 011.25 1.55 2.09 2.09 0 00-1.25-1.72L3 .4C1.36-.54 0 .24 0 2.15v.17C0 .42 1.36-.37 3 .58z" fill="#fff" opacity=".3" />
+          </g>
+        </g>
+      </svg>
+      <svg id="captcha-target" version="1.1" xmlns="http://www.w3.org/2000/svg"
+	   viewBox="0 0 960 960">
+        <g>
+	  <g>
+            <!-- Ring -->
+            <circle style="fill: #F9F9F9; transform: scale(2.5, 2.5);" cx="175.12" cy="195.64" r="144.8" />
+	    <path style="fill: #C1272D; transform: scale(2.5, 2.5); transform-origin: 437.8px 489.1px;" d="M437.8,657.7c-93,0-168.6-75.6-168.6-168.6s75.6-168.6,168.6-168.6s168.6,75.6,168.6,168.6 S530.8,657.7,437.8,657.7z M437.8,368.2c-66.7,0-120.9,54.2-120.9,120.9S371.2,610,437.8,610c66.7,0,120.9-54.2,120.9-120.9 S504.5,368.2,437.8,368.2z" />
+	  </g>
+          <g>
+            <!-- Bullseye Target -->
+            <circle style="fill: #C1272D; transform: scale(2.5, 2.5);" cx="175.12" cy="195.64" r="72.4" /> -->
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div id="scripts">
+      <!-- Scripts -->
+      <script type="text/javascript" src="./captcha.js"></script>
+    </div>
+  </body>
+</html>
