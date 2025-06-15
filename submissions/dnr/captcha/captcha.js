@@ -122,6 +122,7 @@ const GiftCard = (document, container, type, click) => {
         // Perform the animation.
         requestAnimationFrame(() => {
             el.style.transform = `translateX(-${offsetX}px)`;
+            el.style.webkitTransform = `translateX(-${offsetX}px)`;
             setTimeout(() => {
                 done(self);
             }, TIMEOUT);
@@ -153,6 +154,7 @@ const GiftCard = (document, container, type, click) => {
         const offsetX = template.offsetLeft + template.offsetWidth + el.offsetLeft + el.offsetWidth;
         requestAnimationFrame(() => {
             el.style.transform = `translateX(-${offsetX}px)`;
+            el.style.webkitTransform = `translateX(-${offsetX}px)`;
             timer = setTimeout(() => {
                 el.style.visibility = "hidden";
                 remove();
@@ -174,6 +176,7 @@ const GiftCard = (document, container, type, click) => {
         const offsetY = container.offsetHeight;
         requestAnimationFrame(() => {
             el.style.transform += ` translateY(${offsetY}px)`;
+            el.style.webkitTransform += ` translateY(${offsetY}px)`;
             timer = setTimeout(() => {
                 el.style.visibility = "hidden";
                 remove();
@@ -361,6 +364,7 @@ const CaptchaBalance = (document, value) => {
             const footer = document.getElementById("captcha-footer");
             const offsetY = footer.offsetHeight + 5;
             el.style.transform = `translateY(-${offsetY}px)`;
+            el.style.webkitTransform = `translateY(-${offsetY}px)`;
 
             setTimeout(() => {
                 el.remove();

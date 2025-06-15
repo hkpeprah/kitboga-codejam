@@ -213,6 +213,7 @@ const EventLoop = (document, canvas) => {
 
         const boundaries = canvas.getBoundingClientRect();
         if (isWithin(clientPos, boundaries)) {
+            ev.stopPropagation();
             ev.preventDefault();
             curPos = clientPos;
 
@@ -245,8 +246,9 @@ const EventLoop = (document, canvas) => {
         const clientPos = getCoordinates(ev);
         const boundaries = canvas.getBoundingClientRect();
         if (isWithin(clientPos, boundaries)) {
-            curPos = clientPos;
+            ev.stopPropagation();
             ev.preventDefault();
+            curPos = clientPos;
         }
     };
 
@@ -401,6 +403,7 @@ const Ship = (document, canvas, x, y) => {
         el.style.width = `${height}px`;
         el.style.height = `${width}px`;
         el.style.transform = `rotate(${angle}deg) scale(${scale})`;
+        el.style.webkitTransform = `rotate(${angle}deg) scale(${scale})`;
         canvas.appendChild(el);
     };
 
@@ -441,6 +444,7 @@ const Ship = (document, canvas, x, y) => {
         el.style.top = `${posY}px`;
         el.style.left = `${posX}px`;
         el.style.transform = `rotate(${angle}deg) scale(${scale})`;
+        el.style.webkitTransform = `rotate(${angle}deg) scale(${scale})`;
     };
 
     /**
@@ -741,10 +745,17 @@ const Number = (document, canvas, x, y, value) => {
     };
 
     /**
-     * @brief Hides the element from the DOM.
+     * @brief Hides and removes the element from the DOM.
      */
     const hide = () => {
         el.style.visibility = "hidden";
+    };
+
+    /**
+     * @brief Removes the element from the DOM.
+     */
+    const remove = () => {
+        el.remove();
     };
 
     /**
@@ -780,6 +791,7 @@ const Number = (document, canvas, x, y, value) => {
         self.move = move;
         self.show = show;
         self.hide = hide;
+        self.remove = remove;
         self.visible = visible;
         self.reset = reset;
         self.getBounds = getBounds;
@@ -953,8 +965,8 @@ const Captcha = (window, document) => {
     const center = new Point(canvas.offsetWidth / 2, canvas.offsetHeight / 2);
     const ship = Ship(document, canvas, center.x, center.y);
     const loop = EventLoop(document, canvas);
-    const numbers = [];
 
+    let numbers = [];
     let done = false;
 
     /**
@@ -978,61 +990,57 @@ const Captcha = (window, document) => {
      */
     const refreshNumbers = () => {
         const values = generateSpecialArray(numNumbers, MAX_SUM);
+        numbers.forEach((n) => {
+            n.remove();
+        });
+        numbers = [];
 
-        if (numbers.length) {
-            numbers.forEach((n, i) => {
-                n.hide();
-                n.reset();
-                n.set(values[i]);
-            });
-        } else {
-            let coords = [];
-            const perimeter = (canvas.offsetWidth * 2) + (canvas.offsetHeight * 2);
-            const stepSize = perimeter / values.length;
-            let x = Math.random() * canvas.offsetWidth;
-            let y = 0;
+        let coords = [];
+        const perimeter = (canvas.offsetWidth * 2) + (canvas.offsetHeight * 2);
+        const stepSize = perimeter / values.length;
+        let x = Math.random() * canvas.offsetWidth;
+        let y = 0;
 
-            for (let i = 0; i < values.length; i++) {
-                numbers.push(Number(document, canvas, x, y, values[i]));
+        for (let i = 0; i < values.length; i++) {
+            numbers.push(Number(document, canvas, x, y, values[i]));
 
-                // Compute the next (x, y) coordinates along the perimeter of
-                // the canvas.
-                if (y == 0) {
-                    // Moving along the top of the canvas.
-                    if ((x + stepSize) > canvas.offsetWidth) {
-                        // Switch from top -> right.
-                        y = (x + stepSize) - canvas.offsetWidth;
-                        x = canvas.offsetWidth;
-                    } else {
-                        x += stepSize;
-                    }
-                } else if (y == canvas.offsetHeight) {
-                    // Moving along the bottom of the canvas.
-                    if ((x - stepSize) < 0) {
-                        // Switch from bottom -> left.
-                        y = canvas.offsetHeight - (stepSize - x);
-                        x = 0;
-                    } else {
-                        x -= stepSize;
-                    }
-                } else if (x == 0) {
-                    // Moving along the left side of the canvas.
-                    if ((y - stepSize) < 0) {
-                        // Switching from left -> top.
-                        x = stepSize - y;
-                        y = 0;
-                    } else {
-                        y -= stepSize;
-                    }
+            // Compute the next (x, y) coordinates along the perimeter of
+            // the canvas.
+            if (y == 0) {
+                // Moving along the top of the canvas.
+                if ((x + stepSize) > canvas.offsetWidth) {
+                    // Switch from top -> right.
+                    y = (x + stepSize) - canvas.offsetWidth;
+                    x = canvas.offsetWidth;
                 } else {
-                    // Moving along the right side of the canvas.
-                    if ((y + stepSize) > canvas.offsetHeight) {
+                    x += stepSize;
+                }
+            } else if (y == canvas.offsetHeight) {
+                // Moving along the bottom of the canvas.
+                if ((x - stepSize) < 0) {
+                    // Switch from bottom -> left.
+                    y = canvas.offsetHeight - (stepSize - x);
+                    x = 0;
+                } else {
+                    x -= stepSize;
+                }
+            } else if (x == 0) {
+                    // Moving along the left side of the canvas.
+                if ((y - stepSize) < 0) {
+                    // Switching from left -> top.
+                    x = stepSize - y;
+                    y = 0;
+                } else {
+                    y -= stepSize;
+                }
+            } else {
+                // Moving along the right side of the canvas.
+                if ((y + stepSize) > canvas.offsetHeight) {
                         // Switching from right -> bottom.
-                        x = canvas.offsetWidth - ((y + stepSize) - canvas.offsetHeight);
-                        y = canvas.offsetHeight;
-                    } else {
-                        y += stepSize;
-                    }
+                    x = canvas.offsetWidth - ((y + stepSize) - canvas.offsetHeight);
+                    y = canvas.offsetHeight;
+                } else {
+                    y += stepSize;
                 }
             }
         }
@@ -1059,7 +1067,7 @@ const Captcha = (window, document) => {
         // successfully. Note that the failure case is NOT !solved(), as if there
         // are not enough input values yet, solved() will return false.
         const visible = n.visible();
-        n.hide();
+        n.remove();
         if (visible) {
             eq.addInput(n.getValue());
         }

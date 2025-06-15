@@ -19,7 +19,9 @@ body {
 .captcha-container .captcha {
     width: 100%;
     height: 100%;
+    touch-action: none;
     box-sizing: border-box;
+    overscroll-behavior: none;
 }
 
 .captcha-container .captcha .captcha-app {
@@ -221,8 +223,10 @@ body {
 @keyframes rotate {
     0% {
         transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
     }
     100% {
         transform: rotate(180deg);
+        -webkit-transform: rotate(180deg);
     }
 }
