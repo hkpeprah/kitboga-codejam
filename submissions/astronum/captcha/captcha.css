@@ -204,8 +204,6 @@ body {
 }
 
 .captcha-container .captcha .captcha-asteroid {
-    width: 2.5em;
-    height: 2.5em;
     display: flex;
     color: #F9F9F9;
     font-size: 0.9em;

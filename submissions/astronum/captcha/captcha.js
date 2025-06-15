@@ -613,6 +613,8 @@ const Number = (document, canvas, x, y, value) => {
 
     const el = document.createElement("div");
 
+    const size = Math.min(canvas.offsetWidth, canvas.offsetHeight) * 0.10;
+
     let originX = x;
     let originY = y;
     let xPos = null;
@@ -643,6 +645,8 @@ const Number = (document, canvas, x, y, value) => {
     const render = () => {
         el.className = "captcha-asteroid";
         el.innerHTML = value.toString();
+        el.style.width = `${size}px`;
+        el.style.height = `${size}px`;
         canvas.appendChild(el);
 
         // Adjust the origin to account for the element being out of bounds of
@@ -929,11 +933,12 @@ const CaptchaOverlay = (container) => {
  */
 const Captcha = (window, document) => {
     const MAX_SUM = 100;
+    const MIN_NUM_ASTEROIDS = 3;
 
     const DEFAULT_NUM_ASTEROIDS = 6;
 
     const searchParams = new URLSearchParams(window.location.search);
-    const numNumbers = searchParams.get("asteroidCount") || DEFAULT_NUM_ASTEROIDS;
+    const numNumbers = Math.max(MIN_NUM_ASTEROIDS, searchParams.get("asteroidCount") || DEFAULT_NUM_ASTEROIDS);
 
     const eq = CaptchaEquation(document.getElementById("captcha-title"));
     const overlay = CaptchaOverlay(document.getElementById("captcha-overlay"));
