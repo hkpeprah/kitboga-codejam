@@ -42,3 +42,11 @@ solved by inputting either 1, 15 and 16, or 15, 1 and 16 (`1 + 15 = 16`).
 
 * To resume or start the captcha, click anywhere inside of the play area.
 * Pausing can be done by clicking outside of the play area.
+
+## Configuration
+
+Query parameters can be used to modify the behaviour of the captcha.
+
+| Query Parameter  |  Type  | Description                                           |
+| :--------------: | :----: | :---------------------------------------------------- |
+|  `asteroidCount` |  `int` | Number of asteroids (numbers) to render (default: 6). |

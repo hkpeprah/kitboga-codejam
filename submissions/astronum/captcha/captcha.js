@@ -6,6 +6,10 @@ const KeyCodes = Object.freeze({
     UP: 38,
     RIGHT: 39,
     DOWN: 40,
+    W: 87,
+    A: 65,
+    S: 83,
+    D: 68,
 });
 
 /**
@@ -377,12 +381,12 @@ const Ship = (document, canvas, x, y) => {
     const el = document.createElement("div");
 
     // Ship dimensions.
-    const width = Math.min(canvas.offsetWidth, canvas.offsetHeight) * 0.03;
-    const height = Math.min(canvas.offsetWidth, canvas.offsetHeight) * 0.06;
+    const width = Math.min(canvas.offsetWidth, canvas.offsetHeight) * 0.10;
+    const height = Math.min(canvas.offsetWidth, canvas.offsetHeight) * 0.14;
 
     // Parameters for rendering the ship.
-    let posX = x - (width / 2);
-    let posY = y - (height / 2);
+    let posX = x - (height / 2);
+    let posY = y - (width / 2);
     let scale = 1.0;
     let angle = 90.0;
 
@@ -391,14 +395,11 @@ const Ship = (document, canvas, x, y) => {
      */
     const render = () => {
         el.setAttribute("id", "captcha-ship");
-        el.style.width = "0px";
-        el.style.height = "0px";
-        el.style.position = "absolute";
+        el.className = "captcha-ship";
         el.style.top = `${posY}px`;
         el.style.left = `${posX}px`;
-        el.style.borderTop = `${width}px solid transparent`;
-        el.style.borderBottom = `${width}px solid transparent`;
-        el.style.borderRight = `${height}px solid #F9F9F9`;
+        el.style.width = `${height}px`;
+        el.style.height = `${width}px`;
         el.style.transform = `rotate(${angle}deg) scale(${scale})`;
         canvas.appendChild(el);
     };
@@ -610,7 +611,7 @@ const Ship = (document, canvas, x, y) => {
 const Number = (document, canvas, x, y, value) => {
     const BOUND_OFFSET = 15.0;
 
-    const el = document.createElement("i");
+    const el = document.createElement("div");
 
     let originX = x;
     let originY = y;
@@ -640,8 +641,8 @@ const Number = (document, canvas, x, y, value) => {
      * @brief Renders and adds the element to the DOM.
      */
     const render = () => {
+        el.className = "captcha-asteroid";
         el.innerHTML = value.toString();
-        el.style.position = "absolute";
         canvas.appendChild(el);
 
         // Adjust the origin to account for the element being out of bounds of
@@ -732,7 +733,6 @@ const Number = (document, canvas, x, y, value) => {
     const show = () => {
         el.style.top = `${yPos}px`;
         el.style.left = `${xPos}px`;
-        el.style.display = "block";
         el.style.visibility = "visible";
     };
 
@@ -764,12 +764,6 @@ const Number = (document, canvas, x, y, value) => {
 
         // Choose a random direction to go.
         angle = Math.random() * 360;
-
-        // Choose a random colour.
-        const r = Math.floor(127 + Math.random() * (255 - 127 + 1));
-        const g = Math.floor(127 + Math.random() * (255 - 127 + 1));
-        const b = Math.floor(127 + Math.random() * (255 - 127 + 1));
-        el.style.color = `rgb(${r}, ${g}, ${b})`;
     };
 
     return (() => {
@@ -934,8 +928,12 @@ const CaptchaOverlay = (container) => {
  * @param document {Document} DOM element.
  */
 const Captcha = (window, document) => {
-    const MAX_NUMBERS = 6;
     const MAX_SUM = 100;
+
+    const DEFAULT_NUM_ASTEROIDS = 6;
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const numNumbers = searchParams.get("asteroidCount") || DEFAULT_NUM_ASTEROIDS;
 
     const eq = CaptchaEquation(document.getElementById("captcha-title"));
     const overlay = CaptchaOverlay(document.getElementById("captcha-overlay"));
@@ -974,7 +972,7 @@ const Captcha = (window, document) => {
      * around the edge of the canvas.
      */
     const refreshNumbers = () => {
-        const values = generateSpecialArray(MAX_NUMBERS, MAX_SUM);
+        const values = generateSpecialArray(numNumbers, MAX_SUM);
 
         if (numbers.length) {
             numbers.forEach((n, i) => {
@@ -1108,18 +1106,22 @@ const Captcha = (window, document) => {
     const onKeyPress = (code, _) => {
         switch (code) {
             case KeyCodes.UP:
+            case KeyCodes.W:
                 ship.forward();
                 break;
 
             case KeyCodes.DOWN:
+            case KeyCodes.S:
                 ship.backward();
                 break;
 
             case KeyCodes.LEFT:
+            case KeyCodes.A:
                 ship.rotateLeft();
                 break;
 
             case KeyCodes.RIGHT:
+            case KeyCodes.D:
                 ship.rotateRight();
                 break;
 
@@ -1227,10 +1229,20 @@ const Captcha = (window, document) => {
         loop.addTickEvent(onTick);
 
         // Bind event loop events.
-        loop.addKeyEvent(KeyCodes.UP, onKeyPress, true);
-        loop.addKeyEvent(KeyCodes.DOWN, onKeyPress, true);
-        loop.addKeyEvent(KeyCodes.LEFT, onKeyPress, true);
-        loop.addKeyEvent(KeyCodes.RIGHT, onKeyPress, true);
+        const keyCodes = [
+            KeyCodes.UP,
+            KeyCodes.DOWN,
+            KeyCodes.LEFT,
+            KeyCodes.RIGHT,
+            KeyCodes.W,
+            KeyCodes.A,
+            KeyCodes.S,
+            KeyCodes.D,
+        ];
+
+        keyCodes.forEach((code) => {
+            loop.addKeyEvent(code, onKeyPress, true);
+        });
         loop.addMouseEvent(onDrag, true);
         loop.addTouchEvent(onDrag, true);
     };

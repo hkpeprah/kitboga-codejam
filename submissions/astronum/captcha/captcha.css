@@ -31,11 +31,100 @@ body {
     border: 1px solid #CCCCCC;
 }
 
-.captcha-container .captcha .captcha-app i {
-    font-size: 0.9em;
-    font-weight: 700;
-    font-style: normal;
-    font-family: 'Press Start 2P', math, monospace;
+.captcha-container .captcha .captcha-stars {
+    left: 50%;
+    height: 1px;
+    width: 1px;
+    border-radius: 50%;
+    position: absolute;
+    background-color: #FFF;
+    animation: rotate 30s alternate infinite;
+    box-shadow:
+        24vw 9vh 1px 0px #FFF,
+        12vw -24vh 0px 1px #FFF,
+        -45vw -22vh 0px 0px #FFF,
+        -37vw -40vh 0px 1px #FFF,
+        29vw 19vh 0px 1px #FFF,
+        4vw -8vh 0px 1px #FFF,
+        -5vw 21vh 1px 1px #FFF,
+        -27vw 26vh 1px 1px #FFF,
+        -47vw -3vh 1px 1px #FFF,
+        -28vw -30vh 0px 1px #FFF,
+        -43vw -27vh 0px 1px #FFF,
+        4vw 22vh 1px 1px #FFF,
+        36vw 23vh 0px 0px #FFF,
+        -21vw 24vh 1px 1px #FFF,
+        -16vw 2vh 1px 0px #FFF,
+        -16vw -6vh 0px 0px #FFF,
+        5vw 26vh 0px 0px #FFF,
+        -34vw 41vh 0px 0px #FFF,
+        1vw 42vh 1px 1px #FFF,
+        11vw -13vh 1px 1px #FFF,
+        48vw -8vh 1px 0px #FFF,
+        22vw -15vh 0px 0px #FFF,
+        45vw 49vh 0px 0px #FFF,
+        43vw -27vh 1px 1px #FFF,
+        20vw -2vh 0px 0px #FFF,
+        8vw 22vh 0px 1px #FFF,
+        39vw 48vh 1px 1px #FFF,
+        -21vw -11vh 0px 1px #FFF,
+        -40vw 45vh 0px 1px #FFF,
+        11vw -30vh 1px 0px #FFF,
+        26vw 30vh 1px 0px #FFF,
+        45vw -29vh 0px 1px #FFF,
+        -2vw 18vh 0px 0px #FFF,
+        -29vw -45vh 1px 0px #FFF,
+        -7vw -27vh 1px 1px #FFF,
+        42vw 24vh 0px 0px #FFF,
+        45vw -48vh 1px 0px #FFF,
+        -36vw -18vh 0px 0px #FFF,
+        -44vw 13vh 0px 1px #FFF,
+        36vw 16vh 0px 1px #FFF,
+        40vw 24vh 0px 0px #FFF,
+        18vw 11vh 0px 0px #FFF,
+        -15vw -23vh 1px 0px #FFF,
+        -24vw 48vh 0px 1px #FFF,
+        27vw -45vh 1px 0px #FFF,
+        -2vw -24vh 0px 1px #FFF,
+        -15vw -28vh 0px 0px #FFF,
+        -43vw 13vh 1px 0px #FFF,
+        7vw 27vh 1px 0px #FFF,
+        47vw 5vh 0px 0px #FFF,
+        -45vw 15vh 1px 1px #FFF,
+        -5vw -28vh 0px 1px #FFF,
+        38vw 25vh 1px 1px #FFF,
+        -39vw -1vh 1px 0px #FFF,
+        5vw 0vh 1px 0px #FFF,
+        49vw 13vh 0px 0px #FFF,
+        48vw 10vh 0px 1px #FFF,
+        19vw -28vh 0px 0px #FFF,
+        4vw 7vh 0px 0px #FFF,
+        21vw 21vh 1px 1px #FFF,
+        -15vw -15vh 0px 1px #FFF,
+        -6vw -42vh 1px 0px #FFF,
+        -15vw 48vh 1px 1px #FFF,
+        -23vw 25vh 1px 1px #FFF,
+        -48vw 25vh 0px 1px #FFF,
+        -31vw -19vh 0px 1px #FFF,
+        4vw 37vh 1px 1px #FFF,
+        -43vw 28vh 0px 0px #FFF,
+        3vw -25vh 0px 1px #FFF,
+        -39vw 14vh 0px 1px #FFF,
+        -40vw 31vh 0px 1px #FFF,
+        35vw -36vh 1px 1px #FFF,
+        16vw 49vh 0px 0px #FFF,
+        6vw 39vh 0px 0px #FFF,
+        3vw -35vh 0px 1px #FFF,
+        -44vw -2vh 1px 0px #FFF,
+        -6vw 21vh 1px 0px #FFF,
+        48vw 9vh 1px 1px #FFF,
+        -43vw 30vh 1px 1px #FFF,
+        29vw -12vh 1px 1px #FFF,
+        -48vw 13vh 1px 0px #FFF,
+        -42vw 32vh 1px 1px #FFF,
+        34vw 15vh 1px 1px #FFF,
+        29vw -37vh 1px 1px #fff,
+        28vw 2vh 0px 0px #fff;
 }
 
 .captcha-container .captcha .captcha-title {
@@ -87,6 +176,10 @@ body {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
+.captcha-container .captcha .captcha-overlay:hover {
+    cursor: pointer;
+}
+
 .captcha-container .captcha .captcha-overlay > * {
     color: #F9F9F9;
     font-family: 'Oxanium', sans-serif;
@@ -99,4 +192,39 @@ body {
 
 .captcha-container .captcha .captcha-overlay span {
     font-size: 0.8em;
+}
+
+.captcha-container .captcha .captcha-ship {
+    display: block;
+    position: absolute;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url("./ship.png");
+}
+
+.captcha-container .captcha .captcha-asteroid {
+    width: 2.5em;
+    height: 2.5em;
+    display: flex;
+    color: #F9F9F9;
+    font-size: 0.9em;
+    font-weight: 700;
+    font-style: normal;
+    position: absolute;
+    align-items: center;
+    background-size: cover;
+    justify-content: center;
+    background-repeat: no-repeat;
+    background-image: url("./asteroid.png");
+    font-family: 'Play', math, monospace;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(180deg);
+    }
 }
