@@ -220,14 +220,14 @@ const Can = (document, container, beans) => {
      */
     const render = () => {
         let img = document.createElement("img");
-        img.src = "https://cdn.frankerfacez.com/emoticon/62800/4";
+        img.src = "./can.png";
         el.appendChild(img);
 
         img = document.createElement("img");
         if (beans) {
-            img.src = "https://cdn.frankerfacez.com/emoticon/284305/4";
+            img.src = "./bean.png";
         } else {
-            img.src = "https://cdn.frankerfacez.com/emoticon/380518/4";
+            img.src = "./jebaited.png";
         }
         contents.className = "captcha-can-contents";
         contents.style.visibility = "hidden";
@@ -316,16 +316,24 @@ const Captcha = (window, document) => {
     // Number of milliseconds between updates to the DOM in milliseconds.
     const EVENT_LOOP_TICK = 10;
 
-    const NUM_CANS = 3;
-    const NUM_ROUNDS = 3;
-    const ANIMATION_SPEED = 80;
-    const ANIMATION_COUNT = 5;
+    const DEFAULT_NUM_CANS = 3;
+    const DEFAULT_NUM_ROUNDS = 3;
+    const DEFAULT_NUM_SHUFFLES = 5;
+    const DEFAULT_SHUFFLE_SPEED = 80;
+
+    // Number of cans, number of rounds, number of shuffles per round (round number *)
+    // shuffle speed in increments of 10ms (/ round number)
+    const searchParams = new URLSearchParams(window.location.search);
+    const numCans = searchParams.get("numCans") || DEFAULT_NUM_CANS;
+    const numRounds = searchParams.get("numRounds") || DEFAULT_NUM_ROUNDS;
+    const numShuffles = searchParams.get("numShuffles") || DEFAULT_NUM_SHUFFLES;
+    const shuffleSpeed = searchParams.get("shuffleSpeed") || DEFAULT_SHUFFLE_SPEED;
 
     const title = document.createElement("h3");
     const container = document.getElementById("captcha-app");
     const overlay = CaptchaOverlay(document.getElementById("captcha-overlay"));
-    const cans = Array.from({ length: NUM_CANS }, (_, idx) => {
-        return Can(document, container, (idx == Math.floor(NUM_CANS / 2)));
+    const cans = Array.from({ length: numCans }, (_, idx) => {
+        return Can(document, container, (idx == Math.floor(numCans / 2)));
     });
 
     // Current round.
@@ -432,7 +440,7 @@ const Captcha = (window, document) => {
         });
 
         // Generate all arcs.
-        for (let j = 0; j < (ANIMATION_COUNT * (round + 1)); j++) {
+        for (let j = 0; j < (numShuffles * (round + 1)); j++) {
             // Generate the new positions to move to. We keep track of the
             // previous and new positions in order to ensure we move each can
             // from its current position to the new one.
@@ -445,7 +453,7 @@ const Captcha = (window, document) => {
             cans.forEach((can, idx) => {
                 // Randomize whether the arc is above or below the X axis.
                 const trajectory = (Math.random() < 0.5 ? true : false);
-                arcs.push(new Arc(prevPositions[idx], newPositions[idx], ANIMATION_SPEED / (round + 1), trajectory));
+                arcs.push(new Arc(prevPositions[idx], newPositions[idx], shuffleSpeed / (round + 1), trajectory));
             });
 
             // Add the generated arcs to the animation list.
@@ -469,7 +477,7 @@ const Captcha = (window, document) => {
         failed = false;
         started = false;
         animations = [];
-        overlay.set("Click Anywhere to Start", "Correctly identify the right can 3 times.");
+        overlay.set("Click Anywhere to Start", `Correctly identify the right can ${numRounds} times.`);
 
         // Render each can in their starting positions.
         let xOffset = container.offsetWidth;
@@ -487,17 +495,17 @@ const Captcha = (window, document) => {
     /**
      * @brief Handles of a successful can identification.
      *
-     * @details If at least `NUM_ROUNDS` has occurred, then success is
+     * @details If at least `numRounds` has occurred, then success is
      * communicated upstream.
      */
     const onSuccess = () => {
-        if (round >= NUM_ROUNDS) {
+        if (round >= numRounds) {
             done = true;
             overlay.set("Success", "", "success");
             window.top.postMessage("success", "*");
         } else {
             started = false;
-            overlay.set("Round Complete", `${NUM_ROUNDS - round} more remaining.`, "pass");
+            overlay.set("Round Complete", `${numRounds - round} more remaining.`, "pass");
         }
     };
 
@@ -507,7 +515,7 @@ const Captcha = (window, document) => {
     const onFailed = () => {
         failed = true;
         started = false;
-        overlay.set("Try Again", "Correctly identify the right can 3 times.", "failed");
+        overlay.set("Try Again", `Correctly identify the right can ${numRounds} times.`, "failed");
     };
 
     /**
@@ -601,11 +609,13 @@ const Captcha = (window, document) => {
             if ((revealing !== undefined) && (revealing !== null)) {
                 const can = cans[revealing];
                 revealing = null;
-                if (can.containsBeans()) {
-                    onSuccess();
-                } else {
-                    onFailed();
-                }
+                setTimeout(() => {
+                    if (can.containsBeans()) {
+                        onSuccess();
+                    } else {
+                        onFailed();
+                    }
+                }, 250);
             }
         } else {
             // Show the next animation frame.

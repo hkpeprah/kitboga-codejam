@@ -19,6 +19,7 @@ body {
 .captcha-container .captcha {
     width: 100%;
     height: 100%;
+    overflow: hidden;
     box-sizing: border-box;
 }
 
@@ -30,9 +31,11 @@ body {
 .captcha-container .captcha .captcha-app {
     width: 100%;
     height: 100%;
+    overflow: hidden;
     position: relative;
     border-radius: 4px;
     background: #F9F9F9;
+    box-sizing: border-box;
     border: 1px solid #CCCCCC;
 }
 
@@ -73,6 +76,10 @@ body {
     flex-direction: column;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.9);
+}
+
+.captcha-container .captcha .captcha-overlay:hover {
+    cursor: pointer;
 }
 
 .captcha-container .captcha .captcha-overlay.captcha-success {
@@ -145,8 +152,8 @@ body {
 }
 
 .captcha-container .captcha .captcha-can img {
-    width: 0.7em;
-    height: 1em;
+    width: 1em;
+    height: 1.5em;
     display: block;
     position: relative;
     visibility: inherit;
@@ -164,8 +171,8 @@ body {
 }
 
 .captcha-container .captcha .captcha-can-contents img {
-    width: 1.3em;
-    height: 1.5em;
+    width: 1.8em;
+    height: 2.3em;
     display: block;
     position: relative;
     visibility: inherit;
@@ -174,8 +181,26 @@ body {
 .captcha-container .captcha .captcha-table {
     left: 0;
     right: 0;
-    bottom: 0;
+    height: 3em;
+    display: block;
     position: absolute;
-    border-top: 2px solid #222222;
-    background: rgb(179, 140, 102);
+    background: #A45b2E;
+    border-top: 2px solid #501F0B;
+    border-bottom: 2px solid #501F0B;
+}
+
+.captcha-container .captcha .captcha-table::before {
+    content: "";
+    height: 0.5em;
+    display: block;
+    margin-top: 3.1em;
+    background: #9f562D;
+    border-bottom: 2px solid #501F0B;
+}
+
+.captcha-container .captcha .captcha-table:after {
+    content: "";
+    height: 10em;
+    display: block;
+    background: rgba(123, 117, 125, 0.3);
 }
