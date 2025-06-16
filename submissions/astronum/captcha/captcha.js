@@ -374,7 +374,7 @@ const EventLoop = (document, canvas) => {
  */
 const Ship = (document, canvas, x, y) => {
     // Constant turn angle for the ship.
-    const TURN_ANGLE = 1.0;
+    const TURN_ANGLE = 2.0;
 
     // Distance (in pixels) to move forwards or backwards on each render.
     const THRUST_DISTANCE = 1.0;
@@ -613,7 +613,7 @@ const Ship = (document, canvas, x, y) => {
  * @returns {Number}
  */
 const Number = (document, canvas, x, y, value) => {
-    const BOUND_OFFSET = 15.0;
+    const BOUND_OFFSET = 10;
 
     const el = document.createElement("div");
 
@@ -655,22 +655,20 @@ const Number = (document, canvas, x, y, value) => {
 
         // Adjust the origin to account for the element being out of bounds of
         // the canvas.
-        const width = el.offsetWidth;
-        const height = el.offsetHeight;
         if (originX == 0) {
             originX += BOUND_OFFSET;
         }
 
-        if ((originX + width) >= canvas.offsetWidth) {
-            originX = canvas.offsetWidth - width - BOUND_OFFSET;
+        if ((originX + size) >= canvas.offsetWidth) {
+            originX = canvas.offsetWidth - size - BOUND_OFFSET;
         }
 
         if (originY == 0) {
             originY += BOUND_OFFSET;
         }
 
-        if ((originY + height) >= canvas.offsetHeight) {
-            originY = canvas.offsetHeight - height - BOUND_OFFSET;
+        if ((originY + size) >= canvas.offsetHeight) {
+            originY = canvas.offsetHeight - size - BOUND_OFFSET;
         }
 
         xPos = originX;
@@ -726,7 +724,7 @@ const Number = (document, canvas, x, y, value) => {
         if (collide) {
             // Only collision, randomly choose a direction to try and escape
             // the collision.
-            angle = (angle + Math.random() * 45) % 360;
+            angle = (angle + (Math.random() * 90)) % 360;
         } else {
             yPos += yDelta;
             xPos += xDelta;
@@ -995,54 +993,39 @@ const Captcha = (window, document) => {
         });
         numbers = [];
 
-        let coords = [];
-        const perimeter = (canvas.offsetWidth * 2) + (canvas.offsetHeight * 2);
+        const canvasWidth = canvas.offsetWidth;
+        const canvasHeight = canvas.offsetHeight;
+        const perimeter = (canvasWidth * 2) + (canvasHeight * 2);
         const stepSize = perimeter / values.length;
-        let x = Math.random() * canvas.offsetWidth;
-        let y = 0;
+        let step = Math.random() * canvasWidth;
 
+        // Compute an array of (x, y) coordinates equally spaced along the perimeter
+        // of the canvas starting at the given (x, y). We do the math as follows:
+        //   1. Treat the perimeter as one long line of length `perimeter`.
+        //   2. Increment `step` by `stepSize` each iteration.
+        //   3. Derive `(x, y)` from `step`.
         for (let i = 0; i < values.length; i++) {
-            numbers.push(Number(document, canvas, x, y, values[i]));
-
-            // Compute the next (x, y) coordinates along the perimeter of
-            // the canvas.
-            if (y == 0) {
-                // Moving along the top of the canvas.
-                if ((x + stepSize) > canvas.offsetWidth) {
-                    // Switch from top -> right.
-                    y = (x + stepSize) - canvas.offsetWidth;
-                    x = canvas.offsetWidth;
-                } else {
-                    x += stepSize;
-                }
-            } else if (y == canvas.offsetHeight) {
-                // Moving along the bottom of the canvas.
-                if ((x - stepSize) < 0) {
-                    // Switch from bottom -> left.
-                    y = canvas.offsetHeight - (stepSize - x);
-                    x = 0;
-                } else {
-                    x -= stepSize;
-                }
-            } else if (x == 0) {
-                    // Moving along the left side of the canvas.
-                if ((y - stepSize) < 0) {
-                    // Switching from left -> top.
-                    x = stepSize - y;
-                    y = 0;
-                } else {
-                    y -= stepSize;
-                }
+            let x = null;
+            let y = null;
+            if ((step % perimeter) < canvasWidth) {
+                // Top side of square starting from `(0, 0)`.
+                x = (step % perimeter);
+                y = 0;
+            } else if (step < (canvasWidth + canvasHeight)) {
+                // Right side of square starting from `(canvasWidth, 0)`.
+                x = canvasWidth;
+                y = step - x;
+            } else if (step < ((canvasWidth * 2) + canvasHeight)) {
+                // Bottom side of square starting from `(canvasWidth, canvasHeight)`.
+                x = ((canvasWidth * 2) + canvasHeight) - step;
+                y = canvasHeight;
             } else {
-                // Moving along the right side of the canvas.
-                if ((y + stepSize) > canvas.offsetHeight) {
-                        // Switching from right -> bottom.
-                    x = canvas.offsetWidth - ((y + stepSize) - canvas.offsetHeight);
-                    y = canvas.offsetHeight;
-                } else {
-                    y += stepSize;
-                }
+                // Left side of square starting from `(0, canvasHeight)`.
+                x = 0;
+                y = perimeter - step;
             }
+            step += stepSize;
+            numbers.push(Number(document, canvas, x, y, values[i]));
         }
     };
 
